@@ -1,24 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import ValidationComponent from './components/ValidationComponent';
+import CharComponent from './components/CharComponent';
 import './App.css';
 
 function App() {
+  const [text, setText] = useState('');
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setText(value);
+  };
+
+  const textLength = text.length;
+  const textArray = text.split('');
+  const handleClick = (oldArray: string[], index: number) => {
+    const newArray = [...oldArray];
+    newArray.splice(index, 1);
+    setText(newArray.join(''));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="text"
+        name="text"
+        id="text"
+        value={text}
+        onChange={handleChange}
+      />
+      <p>{textLength}</p>
+      <ValidationComponent textLength={textLength} />
+      {textArray.map((char, index) => {
+        return (
+          <CharComponent
+            key={index}
+            letter={char}
+            click={() => handleClick(textArray, index)}
+          />
+        );
+      })}
     </div>
   );
 }
